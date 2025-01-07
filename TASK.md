@@ -1,28 +1,42 @@
-Game Playing Problems
+Task Description
+Consider the following Bayesian Network
+![image](https://github.com/user-attachments/assets/f6a4f6dc-b017-4411-affc-d50ab470b99f)
+Image 1: A Bayesian Network
 
-Task 1
-Your task is to build an agent to play two versions (standard and misère) of  the variant of a game called nim (called red-blue nim against a human player). The game consists of two piles of marbles (red and blue). On each players turn they pick a pile and remove one or two marbles from it (if possible). If on their turn, either pile is empty then they lose in the standard version and win in the misère version. The amount they lose (or win) is dependent on the number of marbles left (2 for every red marble and 3 for every blue marble). So if on the computer player turn, it has 0 red marbles and 3 blue marbles, it loses 9 points in the standard version (or wins 9 points in the misère version).
+The Variables used here are as followes
+B : True if there is a Baseball Game on TV, False if not
+G: True if George watches TV, False if not
+C: True if George is out of Cat Food, False if not
+F: True if George feeds his cat, False if not.
 
-Your program should be called red_blue_nim and the command line invocation should follow the following format:
+Let us say you are given some Training Data which represents what happens over a period of time (For example: This file contains what happens every evening over one specific year). Your Task is to learn the conditonal probabilty tables for the bayesian network from the training data. The training data will be formatted as follows:
+The first number is 0 if there is no baseball game on TV (B is false), and 1 if there is a baseball game on TV (B is true).
+The second number is 0 if George does not watch TV (G is false), and 1 if George watches TV (G is true).
+The third number is 0 if George is not out of cat food (C is false), and 1 if George is out of cat food (C is true).
+The fourth number is 0 if George does not feed the cat (F is false), and 1 if George feeds the cat (F is true).
 
-red_blue_nim.py <num-red> <num-blue> <version> <first-player> <depth>
-<num-red> and <num-blue> are required. (Number of red and blue marbles respectively)
-<version> is either
-standard - Player loses if either pile empty on their turn [default option if <version> is not given]
-misere - Player wins if either pile empty on their turn
- <first-player> can be
-computer - play a full game from given state with computer starting the game followed by human [default option if <first-player> is not given]
-human - play a full game from given state with human starting the game followed by computer
-<depth>  only used if depth limited search (Extra Credit) is implemented.
+Your program should be called bnet and the command line invocation should follow the following format:
 
-For a full game,
-On Computer turn, the program should use MinMax with Alpha Beta Pruning to determine the best move to make and perform the move.
-For move ordering in standard version, use:
-Pick 2 red marble
-Pick 2 blue marble
-Pick 1 red marble
-Pick 1 blue marble
-For misère version, invert that order.
-On Human turn, the program should use a prompt to get the move from the human user and perform the move.
-The program should alternate between these turns till the game ends (when the players run out of either red or blue marbles). Once the game ends, calculate who won and their final score and display it to the user.
+bnet.py <training_data>
+<training_data> text file with training data.
 
+Once you are done calculating the conditional probabilites, the program should calculate the probabilty for any event given evidence (if available) using inference by enumeration.
+
+Your program should display a prompt 'Query:' where you can enter the query in the following format
+
+ Query: <query variable values> [given <evidence variable values>]
+ Values of Query Variables using the following format
+ Bt if B is true, Bf if B is false
+ Gt if G is true, Gf if G is false
+ Ct if C is true, Cf if C is false
+ Ft if F is true, Ff if F is false
+ Values of Evidence Variable (if any) [Format is same as for Query Variable]
+ Sample Queries:
+ Query: Bt Gf given Ff  will use the Bayesian Network to calculate P(B=t, G=f | F=f)
+ Query: Bt Ff  will use the Bayesian Network to calculate P(B=t, F=f)
+ You can display the calculated probabilty values in standard output.
+ After displaying the calculated probabilty, request another Query by displaying the prompt.
+ Repeat till Query is given as None.
+ Query: None will exit the program
+
+Note: You may want to write a function in your code that uses the semantic forumla for bayesian network to reconstruct the JPD values from the Bayesian Network values that you have calculated. You can use this function to obtain the JPD values when performing Inference by enumeration.
